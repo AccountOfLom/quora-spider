@@ -53,7 +53,7 @@ module.exports = {
         questions.forEach((item, index, array) => {
             db.query('SELECT id from questions where text =' + '"' + item.text + '"', function (err, result) {
                 //该问题是否已存储
-                if (result.length === 0) {
+                if (result !== undefined && result.length === 0) {
                     let addSql = 'INSERT INTO questions(topic, text, link, created_at) VALUES(?,?,?,?)';
                     let addSqlParams = [topic, item.text, item.link, new Date().format("yyyy-MM-dd hh:mm:ss")];
                     db.query(addSql, addSqlParams, function (err, result) {
