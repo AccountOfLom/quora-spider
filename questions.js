@@ -42,7 +42,8 @@ module.exports = {
 
             let keywordsArr;
             let keywords = req.param('keywords');
-            if (keywords !== '') {
+            console.log('keywords:' + req.param('keywords'));
+            if (keywords !== '' && keywords !== undefined) {
                 keywordsArr = keywords.split(",");
             }
             let questions = await page.evaluate(() => {
