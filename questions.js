@@ -22,7 +22,7 @@ module.exports = {
      * @param topic
      * @returns {string}
      */
-    link: function(topic) {
+    link: function (topic) {
         return 'https://www.quora.com/topic/' + topic + '?q=' + topic + '';
     },
 
@@ -40,18 +40,38 @@ module.exports = {
 
             await page.waitFor(5000);
 
+            let keywordsArr;
+            let keywords = req.param('keywords');
+            if (keywords !== '') {
+                keywordsArr = keywords.split(",");
+            }
             let questions = await page.evaluate(() => {
                 let questions = new Array();
                 $(".spacing_log_answer_content").each(function (index, item) {
                     let text = $(this).prev().find('a').find('span').text();
-                    if (text !== undefined) {
-                        questions[index] = {};
-                        questions[index].text = text
+                    if (text === undefined) {
+                        return true;
                     }
                     let link = $(this).prev().find('a').attr('href');
-                    if (link !== undefined) {
-                        questions[index].link = link
+                    if (link === undefined) {
+                        return true
                     }
+                    let hasKeyword = true;
+                    if (keywords !== '') {
+                        hasKeyword = false;
+                        keywordsArr.forEach((item, index, array) => {
+                            if (text.indexOf(item) !== -1) {
+                                hasKeyword = true;
+                            }
+                        })
+                    }
+                    if (!hasKeyword) {
+                        return true;
+                    }
+                    questions[index] = {};
+                    questions[index].text = text
+                    questions[index].link = link
+
                 });
                 return questions;
             });
