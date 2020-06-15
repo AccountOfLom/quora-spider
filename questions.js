@@ -58,7 +58,7 @@ module.exports = {
                         return true
                     }
                     let hasKeyword = true;
-                    if (keywords !== '') {
+                    if (keywords !== '' && keywords !== undefined) {
                         hasKeyword = false;
                         keywordsArr.forEach((item, index, array) => {
                             if (text.indexOf(item) !== -1) {
