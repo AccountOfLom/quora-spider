@@ -68,7 +68,7 @@ module.exports = {
         setTimeout(function () {
             db.end();
         }, 2000)
-        console.log('questions seek end');
+        console.log(Date.parse(new Date()) + ' questions seek end');
         return true;
     },
     getQuestionLinkByID: function (id) {
@@ -105,7 +105,7 @@ module.exports = {
         setTimeout(function () {
             db.end();
         }, 3000)
-        console.log('answers seek end');
+        console.log(Date.parse(new Date()) + ' answers seek end');
         return true;
     }
 }

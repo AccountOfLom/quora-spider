@@ -9,12 +9,12 @@ app.get('/', function(req, res) {
 });
 
 app.get('/questions', function(req, res) {
-    console.log('questions seek start');
+    console.log(Date.parse(new Date()) + ' questions seek start');
     questions.list(req, res)
 });
 
 app.get('/answers', function(req, res) {
-    console.log('answers seek start');
+    console.log(Date.parse(new Date()) + 'answers seek start');
     answers.list(req, res)
 });
 app.listen(3000);
