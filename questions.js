@@ -40,12 +40,12 @@ module.exports = {
 
             await page.waitFor(5000);
 
-            let keywordsArr;
-            let keywords = req.param('keywords');
-            console.log('keywords:' + req.param('keywords'));
-            if (keywords !== '' && keywords !== undefined) {
-                keywordsArr = keywords.split(",");
-            }
+            // let keywordsArr;
+            // let keywords = req.param('keywords');
+            // console.log('keywords:' + req.param('keywords'));
+            // if (keywords !== '' && keywords !== undefined) {
+            //     keywordsArr = keywords.split(",");
+            // }
             let questions = await page.evaluate(() => {
                 let questions = new Array();
                 $(".spacing_log_answer_content").each(function (index, item) {
@@ -57,18 +57,18 @@ module.exports = {
                     if (link === undefined) {
                         return true
                     }
-                    let hasKeyword = true;
-                    if (keywords !== '' && keywords !== undefined) {
-                        hasKeyword = false;
-                        keywordsArr.forEach((item, index, array) => {
-                            if (text.indexOf(item) !== -1) {
-                                hasKeyword = true;
-                            }
-                        })
-                    }
-                    if (!hasKeyword) {
-                        return true;
-                    }
+                    // let hasKeyword = true;
+                    // if (keywords !== '' && keywords !== undefined) {
+                    //     hasKeyword = false;
+                    //     keywordsArr.forEach((item, index, array) => {
+                    //         if (text.indexOf(item) !== -1) {
+                    //             hasKeyword = true;
+                    //         }
+                    //     })
+                    // }
+                    // if (!hasKeyword) {
+                    //     return true;
+                    // }
                     questions[index] = {};
                     questions[index].text = text
                     questions[index].link = link
