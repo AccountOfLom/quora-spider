@@ -40,13 +40,7 @@ module.exports = {
 
             await page.waitFor(5000);
 
-            // let keywordsArr;
-            // let keywords = req.param('keywords');
-            // console.log('keywords:' + req.param('keywords'));
-            // if (keywords !== '' && keywords !== undefined) {
-            //     keywordsArr = keywords.split(",");
-            // }
-            let questions = await page.evaluate(() => {
+            var questions = await page.evaluate(() => {
                 let questions = new Array();
                 $(".spacing_log_answer_content").each(function (index, item) {
                     let text = $(this).prev().find('a').find('span').text();
@@ -57,18 +51,6 @@ module.exports = {
                     if (link === undefined) {
                         return true
                     }
-                    // let hasKeyword = true;
-                    // if (keywords !== '' && keywords !== undefined) {
-                    //     hasKeyword = false;
-                    //     keywordsArr.forEach((item, index, array) => {
-                    //         if (text.indexOf(item) !== -1) {
-                    //             hasKeyword = true;
-                    //         }
-                    //     })
-                    // }
-                    // if (!hasKeyword) {
-                    //     return true;
-                    // }
                     questions[index] = {};
                     questions[index].text = text
                     questions[index].link = link
@@ -79,7 +61,31 @@ module.exports = {
 
             await browser.close();
 
-            data.questions(questions, req.param('topic'))
+            let keywordsArr;
+            let keywords = req.param('keywords');
+            if (keywords !== '' && keywords !== undefined) {
+                keywordsArr = keywords.split(",");
+            }
+            console.log(keywordsArr);
+
+            if (keywordsArr !== undefined) {
+                var result = new Array();
+                questions.forEach((question, index, array) => {
+                    let hasKeyword = false;
+                    keywordsArr.forEach((keyword) => {
+                        if (question.text.indexOf(keyword) !== -1) {
+                            hasKeyword = true;
+                        }
+                    })
+                    if (hasKeyword) {
+                        result = questions[index]
+                    }
+                })
+            console.log('keywords spliced');
+            } else {
+                var result = questions;
+            }
+            data.questions(result, req.param('topic'))
 
         })();
 
