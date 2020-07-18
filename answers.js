@@ -51,38 +51,26 @@ module.exports = {
 
             await page.waitFor(3000);
 
-            let s = await page.evaluate(() => {
-                let j = 0;
-                $(".button_wrapper").each(function () {
+            await page.evaluate(() => {    //点击【阅读回答】按钮
+                $("[class='q-text qu-flex--auto puppeteer_test_button_text qu-medium']").each(function () {
                     $(this).click()
-                    j++
                 });
-                return j
             });
-
-            console.log(s);
 
             await page.waitFor(5000);
 
             let answers = await page.evaluate(() => {
                 let answers = new Array();
-                $(".AnswerHeader").each(function (index, item) {
-                    let user = $(this).find('.user').text();
-                    let content = $(this).parent().next().find('.ui_qtext_expanded').find('.ui_qtext_rendered_qtext').html();
+                $("[class='q-box qu-pt--medium qu-pb--medium']").each(function (index, item) {
+                    let user = $(this).find('.qu-alignSelf--center').find('a').eq(0).text();
+                    let content = $(this).find('.qu-userSelect--text').html();
                     if (user !== undefined && content !== undefined) {
                         answers[index] = {};
                         answers[index].user_name = user;    //用户昵称
-                        answers[index].user_link = $(this).find('.user').attr('href');    //用户主页地址
-                        answers[index].user_credential = $(this).find('.NameCredential').text();     // 用户认证信息
-                        answers[index].user_avatar = $(this).find('.ui_avatar_photo').attr('src');     // 用户头像
-                        let bio = '';
-                        $(this).find('.bio').each(function (index, item) {
-                            if (index !== 0) {
-                                bio += '，';
-                            }
-                            bio += $(this).text();
-                        });
-                        answers[index].user_info = bio;     // 用户住址等信息
+                        answers[index].user_link = $(this).find('.qu-alignSelf--center').find('a').attr('href');    //用户主页地址
+                        answers[index].user_credential = $(this).find('.qu-alignSelf--center').find('.qu-borderWidth--retinaOverride').text();     // 用户认证信息
+                        answers[index].user_avatar = $(this).find('img').attr('src');     // 用户头像
+                        answers[index].user_info = '';     // 用户住址等信息
                         answers[index].content = content     // 回答内容
                     }
                 });
