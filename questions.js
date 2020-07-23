@@ -33,33 +33,36 @@ module.exports = {
                 args: ['--no-sandbox']
             });
             const page = await browser.newPage();
+            try {
+                await page.goto(this.link(req.param('topic')));
 
-            await page.goto(this.link(req.param('topic')));
+                await page.addScriptTag({path: './jquery.js'});
 
-            await page.addScriptTag({path: './jquery.js'});
+                await page.waitFor(5000);
 
-            await page.waitFor(5000);
+                var questions = await page.evaluate(() => {
+                    let questions = new Array();
+                    $(".spacing_log_answer_content").each(function (index, item) {
+                        let text = $(this).prev().find('a').find('span').text();
+                        if (text === undefined) {
+                            return true;
+                        }
+                        let link = $(this).prev().find('a').attr('href');
+                        if (link === undefined) {
+                            return true
+                        }
+                        questions[index] = {};
+                        questions[index].text = text
+                        questions[index].link = link
 
-            var questions = await page.evaluate(() => {
-                let questions = new Array();
-                $(".spacing_log_answer_content").each(function (index, item) {
-                    let text = $(this).prev().find('a').find('span').text();
-                    if (text === undefined) {
-                        return true;
-                    }
-                    let link = $(this).prev().find('a').attr('href');
-                    if (link === undefined) {
-                        return true
-                    }
-                    questions[index] = {};
-                    questions[index].text = text
-                    questions[index].link = link
-
+                    });
+                    return questions;
                 });
-                return questions;
-            });
-
-            await browser.close();
+                await browser.close();
+            } catch (e) {
+                console.log(e)
+                await browser.close();
+            }
 
             let keywordsArr;
             let keywords = req.param('keywords');
